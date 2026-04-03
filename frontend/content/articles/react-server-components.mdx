@@ -1,0 +1,63 @@
+---
+title: "React Server Components 实践指南"
+date: "2026-04-01"
+excerpt: "从零开始理解 React Server Components 的工作原理、适用场景和最佳实践，帮你构建更快的 React 应用。"
+featured: false
+category: "frontend"
+tags: ["react", "performance", "server-components"]
+---
+
+## Server Components 是什么
+
+React Server Components（RSC）是一种新的组件类型，它在服务端渲染并且**不会发送 JavaScript 到客户端**。这意味着：
+
+- 更小的客户端 bundle
+- 更快的页面加载
+- 可以直接访问服务端资源（数据库、文件系统等）
+
+### 与 SSR 的区别
+
+SSR（Server-Side Rendering）和 RSC 都在服务端渲染，但有关键差异：
+
+- **SSR** 渲染 HTML，但组件的 JS 仍然会发送到客户端用于 hydration
+- **RSC** 渲染一种特殊的序列化格式，组件的 JS **不会**发送到客户端
+
+```tsx
+// 这是一个 Server Component — 默认行为
+async function ArticleList() {
+  // 可以直接访问数据库
+  const articles = await db.articles.findMany();
+
+  return (
+    <ul>
+      {articles.map((article) => (
+        <li key={article.id}>{article.title}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## 何时使用 Server Components
+
+大多数组件默认应该是 Server Components。只有在需要以下特性时才使用 Client Components：
+
+- 交互性（`onClick`, `onChange` 等）
+- 浏览器 API（`window`, `localStorage` 等）
+- 状态管理（`useState`, `useReducer` 等）
+- 副作用（`useEffect` 等）
+
+## 性能对比
+
+在一个典型的博客应用中，使用 RSC 后：
+
+- 首屏 JavaScript 减少 **60-80%**
+- TTI（Time to Interactive）改善 **40-50%**
+- SEO 友好度与 SSR 持平
+
+## 最佳实践
+
+1. **默认使用 Server Component**，只在必要时添加 `"use client"`
+2. **将交互逻辑下推**到组件树的最底层
+3. **使用 Suspense 边界**实现流式渲染
+4. **避免在 Server Components 中导入客户端专用的库**

@@ -1,0 +1,385 @@
+@import "tailwindcss";
+
+/* ============================================
+   PRECISION TACTILITY — Design System Tokens
+   Extracted from references/code.html
+   ============================================ */
+
+@theme inline {
+  /* Surface hierarchy — no borders, use tone instead */
+  --color-surface: #f9f9fb;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f4f7;
+  --color-surface-container: #ebeef2;
+  --color-surface-container-high: #e4e9ee;
+  --color-surface-container-highest: #dde3e9;
+  --color-surface-dim: #d3dbe2;
+  --color-surface-bright: #f9f9fb;
+  --color-surface-variant: #dde3e9;
+
+  /* Text */
+  --color-on-surface: #2d3338;
+  --color-on-surface-variant: #596065;
+  --color-on-background: #2d3338;
+
+  /* Primary */
+  --color-primary: #5e5e60;
+  --color-primary-dim: #525254;
+  --color-primary-fixed: #e3e2e4;
+  --color-primary-fixed-dim: #d5d4d6;
+  --color-primary-container: #e3e2e4;
+  --color-on-primary: #f8f7f9;
+  --color-on-primary-fixed: #3e3f41;
+  --color-on-primary-fixed-variant: #5b5b5d;
+  --color-on-primary-container: #515254;
+
+  /* Secondary */
+  --color-secondary: #5e5f62;
+  --color-secondary-dim: #525356;
+  --color-secondary-fixed: #e2e2e6;
+  --color-secondary-fixed-dim: #d4d4d8;
+  --color-secondary-container: #e2e2e6;
+  --color-on-secondary: #f9f8fc;
+  --color-on-secondary-fixed: #3e3f43;
+  --color-on-secondary-fixed-variant: #5a5b5f;
+  --color-on-secondary-container: #505255;
+
+  /* Tertiary */
+  --color-tertiary: #5e5f60;
+  --color-tertiary-dim: #525354;
+  --color-tertiary-fixed: #f3f3f4;
+  --color-tertiary-fixed-dim: #e5e5e5;
+  --color-tertiary-container: #f3f3f4;
+  --color-on-tertiary: #f9f9f9;
+  --color-on-tertiary-fixed: #484a4a;
+  --color-on-tertiary-fixed-variant: #656667;
+  --color-on-tertiary-container: #5a5c5c;
+
+  /* Outline */
+  --color-outline: #757c81;
+  --color-outline-variant: #acb3b8;
+
+  /* Error */
+  --color-error: #9f403d;
+  --color-error-dim: #4e0309;
+  --color-error-container: #fe8983;
+  --color-on-error: #fff7f6;
+  --color-on-error-container: #752121;
+
+  /* Inverse */
+  --color-inverse-surface: #0c0e10;
+  --color-inverse-primary: #f1f0f3;
+  --color-inverse-on-surface: #9c9d9f;
+
+  /* Surface tint */
+  --color-surface-tint: #5e5e60;
+
+  /* Background */
+  --color-background: #f9f9fb;
+
+  /* Font families */
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+
+  /* Border radius — machined precision */
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+}
+
+/* ============================================
+   CUSTOM COMPONENT CLASSES
+   ============================================ */
+
+/* Tactile Button: 3D raised with bottom shadow, compresses on active */
+.tactile-button {
+  background: linear-gradient(to bottom, #5e5e60, #525254);
+  box-shadow: 0 4px 0 0 #3e3e40, 0 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s ease;
+  border-radius: 0.5rem; /* xl — buttons use 8px exception */
+}
+
+.tactile-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 0 #3e3e40, 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Inner Milled: recessed into the surface */
+.inner-milled {
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.05),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Inset Deep: deeper press state for milled elements */
+.inset-deep {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.12),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.6);
+}
+
+/* Glass Refraction: floating glass effect */
+.glass-refraction {
+  backdrop-filter: blur(20px);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.4);
+  border-left: 0.5px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Grain Overlay: subtle texture */
+.grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+/* Status Lens: glowing indicator dot */
+.status-lens {
+  box-shadow: 0 0 8px #5e5e60;
+  position: relative;
+}
+
+.status-lens::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  transform: scale(0.5) translate(-1px, -1px);
+}
+
+/* Multi-layer ambient shadow (the "cloud") */
+.shadow-tactile {
+  box-shadow: 0 2px 2px rgba(45, 51, 56, 0.1),
+    0 10px 10px rgba(45, 51, 56, 0.05),
+    0 40px 40px rgba(45, 51, 56, 0.02);
+}
+
+/* Ghost border fallback for accessibility */
+.ghost-border {
+  border: 0.5px solid rgba(172, 179, 184, 0.15);
+}
+
+/* ============================================
+   DARK MODE — surface hierarchy inversion
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #111318;
+    --color-surface-container-lowest: #1d2026;
+    --color-surface-container-low: #161920;
+    --color-surface-container: #2a2d35;
+    --color-surface-container-high: #252830;
+    --color-surface-container-highest: #31343c;
+    --color-surface-dim: #0c0e13;
+    --color-surface-bright: #1a1d24;
+    --color-surface-variant: #3a3d45;
+    --color-on-surface: #e2e3e8;
+    --color-on-surface-variant: #b0b3ba;
+    --color-background: #111318;
+  }
+}
+
+.dark {
+  --color-surface: #111318;
+  --color-surface-container-lowest: #1d2026;
+  --color-surface-container-low: #161920;
+  --color-surface-container: #2a2d35;
+  --color-surface-container-high: #252830;
+  --color-surface-container-highest: #31343c;
+  --color-surface-dim: #0c0e13;
+  --color-surface-bright: #1a1d24;
+  --color-surface-variant: #3a3d45;
+  --color-on-surface: #e2e3e8;
+  --color-on-surface-variant: #b0b3ba;
+  --color-background: #111318;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+body {
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-primary-fixed-dim);
+  color: var(--color-on-primary-fixed);
+}
+
+/* ============================================
+   PROSE / ARTICLE CONTENT
+   ============================================ */
+
+.prose-custom {
+  font-family: var(--font-body);
+  color: var(--color-on-surface);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.prose-custom > * + * {
+  margin-top: 0.75rem;
+}
+
+.prose-custom > p {
+  margin-top: 0.75rem;
+}
+
+.prose-custom h1,
+.prose-custom h2,
+.prose-custom h3,
+.prose-custom h4 {
+  font-family: var(--font-headline);
+  color: var(--color-on-surface);
+  letter-spacing: -0.02em;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-custom h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.prose-custom h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--color-outline-variant);
+  padding-bottom: 0.5rem;
+}
+
+.prose-custom h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.prose-custom h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.prose-custom a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--color-outline-variant);
+  transition: text-decoration-color 0.15s;
+}
+
+.prose-custom a:hover {
+  text-decoration-color: var(--color-primary);
+  opacity: 0.8;
+}
+
+.prose-custom code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.875em;
+  background: var(--color-surface-container);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.prose-custom .inline-code {
+  background: var(--color-surface-container);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.85em;
+}
+
+.prose-custom pre {
+  background: #1a1b26;
+  color: #a9b1d6;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-outline-variant);
+}
+
+.prose-custom pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+.prose-custom blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding: 0.5rem 0 0.5rem 1rem;
+  color: var(--color-on-surface-variant);
+  font-style: italic;
+  margin: 1.5rem 0;
+  background: var(--color-surface-container-low);
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.prose-custom img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.prose-custom hr {
+  border: none;
+  border-top: 1px solid var(--color-outline-variant);
+  margin: 2.5rem 0;
+}
+
+.prose-custom ol,
+.prose-custom ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose-custom ul {
+  list-style-type: disc;
+}
+
+.prose-custom ol {
+  list-style-type: decimal;
+}
+
+.prose-custom li {
+  margin-bottom: 0.4rem;
+  line-height: 1.75;
+}
+
+.prose-custom li > ul,
+.prose-custom li > ol {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.prose-custom strong {
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.prose-custom em {
+  font-style: italic;
+}
+
+.prose-custom table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.prose-custom th,
+.prose-custom td {
+  border: 1px solid var(--color-outline-variant);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.prose-custom th {
+  background: var(--color-surface-container-low);
+  font-weight: 600;
+}

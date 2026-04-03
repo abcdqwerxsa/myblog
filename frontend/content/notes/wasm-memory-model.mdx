@@ -1,0 +1,22 @@
+---
+title: "WebAssembly 线性内存模型"
+date: "2026-04-02"
+mood: "insight"
+tags: ["wasm", "memory", "web"]
+---
+
+WebAssembly 使用线性内存模型——一块连续的可增长字节数组。这与 JavaScript 的垃圾回收堆完全不同。
+
+关键洞察：Wasm 的线性内存使得内存布局完全可预测，这对实时系统和游戏引擎至关重要。但代价是失去了自动内存管理，需要手动管理分配和释放（或使用 `alloc` 库）。
+
+```wat
+;; 在 WAT 中分配内存
+(module
+  (memory (export "memory") 1)  ;; 1 page = 64KB
+  (func (export "store") (param $addr i32) (param $val i32)
+    (i32.store (local.get $addr) (local.get $val))
+  )
+)
+```
+
+这与 C 语言的内存模型非常相似，本质上就是一个巨大的 `Uint8Array`。

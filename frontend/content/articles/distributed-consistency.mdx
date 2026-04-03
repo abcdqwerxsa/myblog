@@ -1,0 +1,76 @@
+---
+title: "分布式系统中的一致性模型"
+date: "2026-03-28"
+excerpt: "深入探讨 CAP 定理约束下的一致性模型选择，从强一致性到最终一致性，结合真实案例分析工程取舍。"
+featured: true
+category: "architecture"
+tags: ["distributed-systems", "consistency", "cap-theorem"]
+---
+
+## 为什么一致性如此重要
+
+在分布式系统中，数据通常会被复制到多个节点上以提高可用性和性能。然而，当多个客户端同时读写同一份数据时，系统必须决定如何处理这些冲突——这就是一致性模型的核心问题。
+
+### CAP 定理的约束
+
+CAP 定理告诉我们，一个分布式系统最多只能同时满足以下三个特性中的两个：
+
+- **一致性（Consistency）**：所有节点在同一时刻看到相同的数据
+- **可用性（Availability）**：每个请求都能在合理时间内收到非错误的响应
+- **分区容错性（Partition tolerance）**：系统在网络分区时仍能继续运作
+
+在现实世界中，网络分区是不可避免的，因此我们实际上只能在 **CP** 和 **AP** 之间做选择。
+
+## 一致性模型谱系
+
+### 强一致性（Linearizability）
+
+强一致性保证一旦写入完成，所有后续读取都能看到该写入。这通常通过共识算法实现：
+
+```python
+# Raft 共识算法中的日志复制
+def append_entries(term, leader_id, prev_log_index, prev_log_term, entries):
+    if term < current_term:
+        return False
+    # 验证日志一致性
+    if prev_log_index >= 0:
+        if log[prev_log_index].term != prev_log_term:
+            return False
+    # 追加新条目
+    for entry in entries:
+        log.append(entry)
+    return True
+```
+
+> 强一致性的代价是延迟——每次写入都需要等待多数节点确认。
+
+### 因果一致性（Causal Consistency）
+
+因果一致性是一种较弱但更实用的模型。它保证因果相关的操作按顺序被所有节点观察到，但并发的写入可以以不同顺序出现。
+
+### 最终一致性（Eventual Consistency）
+
+最终一致性是最宽松的模型——系统只保证在没有新写入的情况下，所有副本最终会收敛到相同的状态。
+
+| 特性 | 强一致性 | 因果一致性 | 最终一致性 |
+| --- | --- | --- | --- |
+| 延迟 | 高 | 中 | 低 |
+| 可用性 | 低 | 高 | 高 |
+| 实现复杂度 | 高 | 中 | 低 |
+| 典型系统 | ZooKeeper, etcd | DynamoDB (DAX) | Cassandra, Dynamo |
+
+## 工程取舍的真实案例
+
+### 案例：电商库存系统
+
+在高并发的秒杀场景中，如果使用强一致性锁来管理库存，系统吞吐量将严重受限。实际做法通常是：
+
+1. 使用 Redis 预扣减库存（乐观锁）
+2. 异步写入数据库（最终一致性）
+3. 通过消息队列保证最终数据正确
+
+这种设计牺牲了一致性，换取了极高的并发处理能力。
+
+## 小结
+
+选择一致性模型没有银弹。理解业务场景的容忍度，在正确的地方使用正确的模型，才是分布式系统设计的核心能力。
