@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Logo } from "@/components/ui/Logo";
 
 const navItems = [
   { href: "/blog", label: "文章" },
@@ -19,9 +20,12 @@ export function GlassNav() {
       <div className="flex items-center space-x-12">
         <Link
           href="/"
-          className="text-xl font-bold tracking-tighter text-zinc-900 font-[family-name:var(--font-headline)]"
+          className="flex items-center gap-2.5"
         >
-          TECH LAB
+          <Logo className="w-7 h-7 text-on-surface" />
+          <span className="text-xl font-bold tracking-tighter text-on-surface font-[family-name:var(--font-headline)]">
+            TECH LAB
+          </span>
         </Link>
         <nav className="hidden md:flex space-x-8">
           {navItems.map((item) => (
